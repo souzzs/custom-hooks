@@ -1,44 +1,25 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import useForm from "./hooks/useForm"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const email = useForm("EMAIL");
+  const password = useForm('PASSWORD');
+  const cpf = useForm('CPF');
+  const cep = useForm('CEP');
+  const numero = useForm('NUMERO');
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <form action="">
+      <input type="text" placeholder="Email" value={email.value} onChange={email.onChange} onBlur={email.onBlur}/>
+      {email.error && <p className="error">{email.error}</p>}
+      <input type="text" placeholder="Password" value={password.value} onChange={password.onChange} onBlur={password.onBlur}/>
+      {password.error && <p className="error">{password.error}</p>}
+      <input type="text" placeholder="Cpf" value={cpf.value} onChange={cpf.onChange} onBlur={cpf.onBlur}/>
+      {cpf.error && <p className="error">{cpf.error}</p>}
+      <input type="text" placeholder="Cep" value={cep.value} onChange={cep.onChange} onBlur={cep.onBlur}/>
+      {cep.error && <p className="error">{cep.error}</p>}
+      <input type="text" placeholder="Numero" value={numero.value} onChange={numero.onChange} onBlur={numero.onBlur}/>
+      {numero.error && <p className="error">{numero.error}</p>}
+    </form>
   )
 }
 
