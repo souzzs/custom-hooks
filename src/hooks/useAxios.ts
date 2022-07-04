@@ -1,32 +1,45 @@
-import { AxiosResponse } from 'axios'
+import axios, { AxiosResponseHeaders } from 'axios';
 import React from 'react'
+import api from '../services/api';
 
-// Recebe uma promise do Axios e sua tipagem
-const useAxios = <T>(promiseAxios: Promise<AxiosResponse<T>>) => {
-    const [data, setData] = React.useState<null | T>(null);
-    const [loading, setLoading] = React.useState<boolean>(true);
+type RequestParams<U> = {
+    method: 'POST' | 'GET' | 'PUT' | 'DELETE';
+    url: string;
+    headers?: AxiosResponseHeaders;
+    data?: U;
+}
+
+type ResquestError = {
+    message: string;
+}
+
+const useAxios = <T>() =>  {
+    const [data, setData] = React.useState<T | null>(null);
+    const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState<null | string>(null);
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setError(null);
-                
-                const response = await promiseAxios;
-                setData(response.data);
-                setError(null);
-            } catch (error) {
-                setData(null);
-                setError(JSON.stringify(error));
-            } finally {
-                setLoading(false);
+    const request = React.useCallback(async (params: RequestParams<T>) => {
+        try {
+            setData(null);
+            setLoading(true);
+            setError(null);
+
+            const {data, status} = await api.request<T>(params);
+
+            if(status !== 200) throw new Error();
+
+            setData(data);
+        } catch (error) {
+            if(axios.isAxiosError(error) && error.response){
+                const dataError = error.response.data as ResquestError;
+                setError(dataError.message);
             }
+        } finally {
+            setLoading(false);
         }
-        fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return {data, loading, error}
+    return {data, loading, error, request}
 }
 
 export default useAxios
