@@ -1,6 +1,8 @@
 import { AxiosResponseHeaders } from 'axios';
 import React from 'react'
 import useAxios from '../hooks/useAxios'
+import useInput from '../hooks/useInput';
+import Input from './Input';
 
 interface Product {
     descricao: string;
